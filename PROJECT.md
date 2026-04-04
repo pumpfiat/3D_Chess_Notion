@@ -1,63 +1,67 @@
 # PROJECT SPECIFICATION - 3D CHESS NOTION (Vibe Jam 2026)
 
 ## Game Concept
-Epic 3D chess battle arena where classical chess meets cinematic war spectacle. 
-Players battle against Stockfish (average Lichess level) or real opponents in a dramatic colosseum or nature battlefield. 
-Captures are violent and cinematic with blood, physics, and camera zooms. Captured pieces become statues around the board.
+Epic 3D cinematic chess battle where chess meets Hollywood war spectacle. 
+Players choose scene, faction, and time control on a dramatic main menu, then enter a living battlefield. 
+Every capture is a cinematic slow-mo event with blood, physics, and COD-style war sounds.
 
-## Core Features
-- 8x8 3D chessboard in center of scene
-- Two selectable environments: Colosseum (spectators + kings) and Nature (waterfall + birds)
-- Three piece factions: COD/Military, Kingdom/Royal, Tribe/Savage (selectable or random)
-- Vs AI (Stockfish WASM at adjustable skill level) + 2-player real-time multiplayer
-- Dramatic capture system: cinematic zoom, physics tumble, blood particles, war/COD sound
-- Promotion with animated pawn transformation + 3D preview choice
-- Captured pieces displayed as statues around the board
-- Instant load (<2s), no login, mobile-friendly camera controls
+## Main Menu (First Screen - MUST load instantly)
+- Full-screen beautiful background (dark cinematic style)
+- Big title: "COLOSSEUM CLASH"
+- Section 1: Choose Scene
+  - Colosseum Arena (kings + roaring crowd in stands)
+  - Nature Battlefield (waterfall, birds flying, mist)
+- Section 2: Choose Faction (with animated preview)
+  - COD / Military (tactical soldiers with guns)
+  - Kingdom / Royal (armored knights)
+  - Tribe / Savage (warriors with axes & warpaint)
+  - "Random" button
+- Animated showcase: All 32 pieces of the chosen faction "rolling" / marching / posing with weapons in a line (smooth Three.js animation loop)
+- Section 3: Time Control
+  - Classic options: 3+0, 5+0, 10+5, 15+10, 30+0, Unlimited
+- Big "START GAME" button (white or black side + "Random" option)
+- Below everything: Clean "How to Play Chess" instructions (short, illustrated with icons)
+- Small "Multiplayer" toggle (2-player real-time via PartyKit)
+
+## In-Game Features
+- 3D chessboard centered in chosen environment
+- When player clicks/drags a piece:
+  - Valid move squares light up with glowing signals (semi-transparent highlight rings or pulsing planes)
+  - Illegal moves show subtle red flash
+- Captures: Cinematic camera zoom + slow-motion + physics tumble + blood particles + war/COD impact sound
+- Promotion: Pawn glows → dramatic transformation animation → 3D preview popup to choose new piece
+- Captured pieces become stone statues displayed neatly around the board
+- Vs Stockfish (Lichess average level, adjustable) + real-time 2-player multiplayer
 
 ## Non-Negotiables (Jam Rules)
 - 90%+ code written by AI
 - New game started after April 1, 2026
-- Web-only, free-to-play, no login/signup
-- Loads instantly — no heavy assets or loading screens
+- Loads instantly (<2 seconds total — menu + game)
+- No login, free-to-play, web-only
 - Add entrant widget script in index.html
 
 ## Tech Stack
 - Three.js (r168+)
-- chess.js for move validation
-- stockfish.wasm (Lichess official) for AI opponent
-- PartyKit for real-time multiplayer
-- Cannon-es (or minimal physics) for capture animations
-- Howler.js or Web Audio API for sounds
-- Tailwind or plain CSS for UI overlays
+- chess.js + stockfish.wasm (Lichess engine)
+- PartyKit (real-time multiplayer)
+- Cannon-es or minimal Three.js physics for captures
+- Howler.js or Web Audio for war sounds
+- Tailwind CSS for clean menu UI
 
-## Folder Structure (create these now)
+## Folder Structure
 /
-├── index.html
+├── index.html          ← Main menu + canvas
 ├── PROJECT.md
 ├── README.md
 ├── src/
 │   ├── main.js
-│   ├── scene.js          # Three.js setup + environment switch
-│   ├── board.js          # Chessboard + pieces
-│   ├── pieces.js         # Piece models + 3 factions
-│   ├── engine.js         # chess.js + Stockfish integration
-│   ├── captures.js       # Cinematic zoom + blood + physics
-│   ├── multiplayer.js    # PartyKit connection
-│   ├── ui.js             # Promotion menu + side selection
+│   ├── menu.js         ← Menu logic & faction animations
+│   ├── scene.js        ← Environment loader (Colosseum / Nature)
+│   ├── board.js
+│   ├── pieces.js       ← 3 factions + rolling animation
+│   ├── engine.js       ← chess.js + Stockfish
+│   ├── captures.js     ← cinematic system
+│   ├── multiplayer.js
+│   ├── ui.js           ← move highlights + promotion
 │   └── sounds.js
-├── assets/               # (keep tiny or empty — use procedural)
-└── public/               # built version if needed
-
-## Vibe & Polish Goals
-- Cinematic camera work on every capture
-- Juicy feedback (particles, screen shake, sound)
-- Humorous / epic announcer voice lines (optional)
-- Make it feel like a blockbuster trailer every game
-
-## Current Phase
-Phase 1: Basic 3D board + piece movement + chess.js validation
-Phase 2: Stockfish AI integration
-Phase 3: Capture cinematics + blood + physics
-Phase 4: Environments + piece factions
-Phase 5: Multiplayer + sounds + polish
+└── assets/             ← tiny sounds only (or base64)
