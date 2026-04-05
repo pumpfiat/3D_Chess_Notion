@@ -35,11 +35,14 @@ let ring;
 let keyLight;
 let rimLight;
 let helpPanel;
+let ground;
 
 init();
 
 function init() {
   scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x06080b);
+  scene.fog = new THREE.Fog(0x06080b, 16, 52);
 
   camera = new THREE.PerspectiveCamera(54, window.innerWidth / window.innerHeight, 0.1, 200);
   camera.position.set(9.5, 8.3, 11.5);
@@ -53,6 +56,9 @@ function init() {
   renderer.toneMappingExposure = 0.95;
   renderer.setPixelRatio(getTargetPixelRatio());
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
   sceneRoot.appendChild(renderer.domElement);
 
   addLighting();
@@ -77,6 +83,12 @@ function init() {
   window.addEventListener('resize', onResize, { passive: true });
   document.addEventListener('visibilitychange', onVisibilityChange);
 
+  clock = new THREE.Clock();
+
+  createMenu(menuRoot);
+
+  window.addEventListener('resize', onResize, { passive: true });
+
   requestAnimationFrame(() => {
     bootOverlay?.classList.add('fade-out');
   });
@@ -89,6 +101,7 @@ function addLighting() {
   scene.add(ambient);
 
   keyLight = new THREE.DirectionalLight(0xffdcb3, 1.5);
+  const keyLight = new THREE.DirectionalLight(0xffdcb3, 1.5);
   keyLight.position.set(14, 20, 10);
   keyLight.castShadow = true;
   keyLight.shadow.mapSize.set(1024, 1024);
@@ -102,6 +115,7 @@ function addLighting() {
   scene.add(keyLight);
 
   rimLight = new THREE.DirectionalLight(0x85a5ff, 0.45);
+  const rimLight = new THREE.DirectionalLight(0x85a5ff, 0.45);
   rimLight.position.set(-10, 7, -14);
   scene.add(rimLight);
 }
@@ -133,6 +147,7 @@ function addEnvironment() {
   scene.add(arenaCore);
 
   ring = new THREE.Mesh(
+  const ring = new THREE.Mesh(
     new THREE.TorusGeometry(10.6, 0.22, 20, 80),
     new THREE.MeshStandardMaterial({ color: 0x3a2f1f, roughness: 0.7, metalness: 0.15 }),
   );
@@ -216,6 +231,16 @@ function onVisibilityChange() {
 
 function animate() {
   animationFrame = requestAnimationFrame(animate);
+function onResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function animate() {
+  requestAnimationFrame(animate);
 
   const t = clock.getElapsedTime();
 
@@ -223,6 +248,10 @@ function animate() {
   camera.position.x = 9.5 + Math.sin(t * 0.14) * 0.35;
   camera.position.y = 8.3 + Math.sin(t * 0.18 + 1.5) * 0.22;
   camera.lookAt(0, 1.4 + Math.sin(t * 0.16) * 0.08, 0);
+
+  if (ground) {
+    ground.material.color.offsetHSL(0, 0, Math.sin(t * 0.08) * 0.0008);
+  }
 
   renderer.render(scene, camera);
 }
